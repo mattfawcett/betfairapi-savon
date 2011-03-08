@@ -6,11 +6,13 @@ Gem::Specification.new do |s|
   s.name        = "betfairapi-savon"
   s.version     = Betfairapi::Savon::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
+  s.authors     = ["Luke Byrne"]
+  s.email       = ["lukeb@lukebyrne.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{A gem providing access to the Betfair API}
+  s.description = %q{Same as above}
+  s.add_development_dependency "savon"
+  s.add_runtime_dependency "savon"
 
   s.rubyforge_project = "betfairapi-savon"
 

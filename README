@@ -1,0 +1,28 @@
+==========
+About
+==========
+Library to access Betfair API. Uses Savon SOAP library instead of Soap4R. Not sure if its faster yet, I will do some speed tests shortly.
+
+==========
+To install
+==========
+
+gem install betfairapi-savon
+
+In an IRB console
+
+require 'rubygems'
+require 'betfairapi-savon'
+bf = Betfair::API.new()
+proxy = nil
+session_token = bf.login('username', 'password', 82, 0, 0, 0, proxy)
+session_token = session_token.result.result.header.sessionToken
+bf.keep_alive(session_token)
+bf.get_all_event_types(session_token)
+bf.logout(session_token)
+
+I have only added various method calls that I need to this gem, see the /lib/betfairapi.rb for the method calls available. 
+
+They are pretty easy an obvious, see the BetfairSportsExchangeAPIReferenceGuidev6.pdf file for more info or to add your own methods.
+
+Feel free to add more if you like and send me a pull request.
