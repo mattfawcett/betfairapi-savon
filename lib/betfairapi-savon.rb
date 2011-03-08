@@ -19,21 +19,18 @@ class BetfairAPI
 		global.request :bf, :login do 
 			soap.body = {'bf:request' => {:username => username, :password => password, :productId => product_id, :vendorSoftwareId => vendor_software_id, :locationId => location_id, :ipAddress => ip_address}}
 		end
-		global.to_hash
 	end
 	
 	def keep_alive(session_token)
 		global.request :bf, :keep_alive do 
 			soap.body = {'bf:request' => { :header => api_request_header(session_token)}}
 		end
-		global.to_hash
 	end
 	
 	def logout(session_token)
 		global.request :bf, :logout do 
 			soap.body = {'bf:request' => { :header => api_request_header(session_token)}}
 		end
-		global.to_hash
 	end
 	
 	############################################
@@ -69,7 +66,6 @@ class BetfairAPI
 		exchange(exchange_id).request :bf, :get_all_markets do
 		  soap.body = {'bf:request' => { :header => api_request_header(session_token)}}
 		end
-		exchange.to_hash
 	end
 	
 	def get_bet
