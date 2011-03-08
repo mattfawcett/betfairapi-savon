@@ -1,6 +1,5 @@
 class BetfairAPI
 
-  require 'rubygems'
   require 'savon'
 
   ##################################
