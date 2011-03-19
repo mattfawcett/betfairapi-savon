@@ -19,7 +19,7 @@ session_token = response.to_hash[:login_response][:result][:header][:session_tok
 api.keep_alive(session_token)
 api.logout(session_token)
 
-I have only added various method calls that I need to this gem, see the /lib/betfairapi.rb for the method calls available. 
+I have only added various method calls that I need to this gem, see the /lib/betfairapi-savon.rb for the method calls available. 
 
 They are pretty easy an obvious, see the BetfairSportsExchangeAPIReferenceGuidev6.pdf file for more info or to add your own methods.
 
