@@ -173,26 +173,13 @@ class BetfairAPI
     raise 'To Do'
   end
   
-  def get_mu_bets(session_token, exchange_id, event_id)
-		exchange(exchange_id).request :bf, :getMUBets do
-			soap.body = {
-				'bf:request' => {
-					:header => api_request_header(session_token),
-					:betStatus => "MU",
-					:marketId => event_id,
-					:orderBy => "NONE",
-					:recordCount => 200,
-					:sortOrder => "ASC",
-					:startRecord => 0
-				}
-			}
-		end
+  def get_mu_bets
+		raise 'To Do'
 	end
 
   def get_macthed_and_unmatched_bets_lite
     raise 'To Do'
   end
-  
   
   def get_profit_and_loss
     raise 'To Do'
@@ -222,22 +209,16 @@ class BetfairAPI
   ## Bet Placement API Services Reference
   ############################################
 
-  def cancel_bets(session_token, exchange_id, bet_id)		
-		bf_bet = { :betId => bet_id } # Cancels one bet at a time. See below.
-		exchange(exchange_id).request :bf, :cancelBets do
-			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :bets => { "CancelBets" => [bf_bet] } } } # "CancelBets" has to be a string, not a symbol!
-		end
+  def cancel_bets	
+		raise 'To Do'
 	end
 
   def cancel_bets_by_market
     raise 'To Do'
   end
 
-  def place_bet(session_token, exchange_id, market_id, selection_id, bet_side, price, volume)				
-		bf_bet = { :asianLineId => 0, :betCategoryType => "E", :betPersistenceType => "NONE", :bspLiability => 0.0, :marketId => market_id, :selectionId => selection_id, :betType => bet_side, :price => price, :size => volume } # Places one bet at a time. See below.
-		exchange(exchange_id).request :bf, :placeBets do
-			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :bets => { "PlaceBets" => [bf_bet] } } } # "PlaceBets" has to be a string, not a symbol!
-		end
+  def place_bet
+		raise 'To Do'
 	end
 
   def update_bets
