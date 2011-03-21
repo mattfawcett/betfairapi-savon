@@ -1,7 +1,7 @@
 ==========
 About
 ==========
-Library to access Betfair API. Uses Savon SOAP library instead of Soap4R. Not sure if its faster yet, I will do some speed tests shortly.
+Library to access Betfair API.
 
 ==========
 To install
