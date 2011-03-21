@@ -14,7 +14,7 @@ In an IRB console:
 require 'rubygems'
 require 'betfairapi-savon'	
 api = BetfairAPI.new
-response = api.login('username', 'password', 82, 0, 0, nil)
+response = api.login('lukebyrne', 'm3d1ap0d', 82, 0, 0, nil)
 session_token = response.to_hash[:login_response][:result][:header][:session_token]
 api.keep_alive(session_token)
 api.logout(session_token)

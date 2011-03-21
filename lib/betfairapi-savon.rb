@@ -22,7 +22,7 @@ class BetfairAPI
   # keep_alive = api.keep_alive(session_token)
   # keep_alive.to_hash[:keep_alive_response]
   def keep_alive(session_token)
-    global.request :bf, :keep_alive do 
+    global.request :bf, :keepAlive do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token) } }
     end
   end
@@ -43,16 +43,16 @@ class BetfairAPI
   # conversion = api.convert_currency(session_token, 20.00, 'AUD', 'UK')
   # conversion.to_hash[:convert_currency_response]
   def convert_currency(session_token, amount, from_currency, to_currency)
-    global.request :bf, :convert_currency do 
+    global.request :bf, :convertCurrency do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token), :amount => amount, :fromCurrency => from_currency, :toCurrency => to_currency } }
     end
   end
   
   # SERVICE_NOT_AVAILABLE_IN_PRODUCT
-  # active_event_types = api.get_active_event_types(session_token, 'GBR')
+  # active_event_types = api.get_active_event_types(session_token)
   # active_event_types.to_hash[:get_active_event_types_response]
   def get_active_event_types(session_token, locale = nil)
-    global.request :bf, :get_active_event_types do 
+    global.request :bf, :getActiveEventTypes do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token), :locale => locale } }
     end	
   end
@@ -61,60 +61,62 @@ class BetfairAPI
   # all_currencies = api.get_all_currencies(session_token)
   # all_currencies.to_hash[:get_all_currencies_response]
   def get_all_currencies(session_token)
-    global.request :bf, :get_all_currencies do 
+    global.request :bf, :getAllCurrencies do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token) } }
     end
   end
 
   # SERVICE_NOT_AVAILABLE_IN_PRODUCT
   # all_currencies = api.get_all_currenciesV2(session_token)
-  # all_currencies.to_hash[:get_all_currenciesV2_response]
+  # all_currencies.to_hash[:get_all_currencies_v2_response]
   def get_all_currenciesV2(session_token)
-    global.request :bf, :get_all_currenciesV2 do 
+    global.request :bf, :getAllCurrenciesV2 do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token) } }
     end	
   end
   
-  # all_event_types = api.get_all_event_types(session_token, 'AUS')
+  # all_event_types = api.get_all_event_types(session_token)
   # all_event_types.to_hash[:get_all_event_types_response]
   def get_all_event_types(session_token, locale = nil)
-    global.request :bf, :get_all_event_types do 
+    global.request :bf, :getAllEventTypes do 
       soap.body = { 'bf:request' => { :header => api_request_header(session_token), :locale => locale } }
     end
   end
 
-  # markets = api.get_all_markets(session_token, nil, nil, [1,3], nil, nil, nil)
+  # markets = api.get_all_markets(session_token, 1, nil, [1,3], nil, nil, nil)
   # markets.to_hash[:get_all_markets_response]
   # markets.to_hash[:get_all_markets_response][:result][:market_data].split(':').each do |market|
   #		puts '------------------------'
   # 	puts market.to_s.split('~')
   # end
-  def get_all_markets(session_token, exchange = nil, locale = nil, event_type_ids = nil, countries = nil, from_date = nil, to_date = nil)
-    exchange(exchange).request :bf, :get_all_markets do
+  def get_all_markets(session_token, exchange_id, locale = nil, event_type_ids = nil, countries = nil, from_date = nil, to_date = nil)
+    exchange(exchange_id).request :bf, :getAllMarkets do
       soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :locale => locale, :eventTypeIds => event_type_ids, :countries => nil, :fromDate => from_date, :toDate => to_date } }
     end
   end
 
   def get_bet
-    raise 'To Do'	
+    raise 'See get bet lite'	
   end
 
   def get_bet_history
     raise 'To Do'
   end
 
-  def get_bet_lite
-    raise 'To Do'
-  end
+  def get_bet_lite(session_token, exchange_id, bet_id)
+		exchange(exchange_id).request :bf, :getBetLite do
+			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :betId => bet_id } }
+		end
+	end
 
   def get_bet_matches_lite
     raise 'To Do'
   end
   
-  # complete_market_prices_compressed = api.get_complete_market_prices_compressed(session_token, nil, nil, 102448928)
-  # complete_market_prices_compressed.to_hash[:complete_market_prices_compressed_response]
-  def get_complete_market_prices_compressed(session_token, exchange = nil, currency_code = nil, market_id = nil)
-    exchange(exchange).request :bf, :get_complete_market_prices_compressed do
+  # complete_market_prices_compressed = api.get_complete_market_prices_compressed(session_token, 1, nil, 102458421)
+  # complete_market_prices_compressed.to_hash[:get_complete_market_prices_compressed_response]
+  def get_complete_market_prices_compressed(session_token, exchange_id, currency_code, market_id)
+    exchange(exchange_id).request :bf, :get_complete_market_prices_compressed do
       soap.body = { 'bf:request' => { :header => api_request_header(session_token), :currencyCode => currency_code, :marketId => market_id } }
     end
   end
@@ -139,42 +141,59 @@ class BetfairAPI
     raise 'To Do'
   end
 
-  # market = api.get_market(session_token, nil, 12345, nil, nil)
-  # market.to_hash[:get_markets_response]
-  def get_market(session_token, exchange = nil, market_id = nil, include_coupon_links = nil, locale = nil)
-    exchange(exchange).request :bf, :get_market do
-      soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :market_id => market_id, :includeCouponLinks => include_coupon_links, :locale => locale } }
-    end
-  end
-
+  # market = api.get_market(session_token, 1, 102458421)
+  # market.to_hash[:get_market_response]
+	def get_market(session_token, exchange_id, market_id)
+		exchange(exchange_id).request :bf, :getMarket do
+			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :marketId => market_id } }
+		end
+	end
+	
   def get_market_info
     raise 'To Do'
   end
   
-  # market_prices = api.get_market_prices(session_token, nil, nil, 102448928)
+  # market_prices = api.get_market_prices(session_token, 1, nil, 102458421)
   # market_prices.to_hash[:get_market_prices_response]
-  def get_market_prices(session_token, exchange = nil, currency_code = nil, market_id = nil)
-   exchange(exchange).request :bf, :get_market_prices do
-      soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :currencyCode => currency_code, :market_id => market_id } }
+  def get_market_prices(session_token, exchange_id, currency_code, market_id)
+    exchange(exchange_id).request :bf, :getMarketPrices do
+      soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :currencyCode => currency_code, :marketId => market_id } }
     end
   end
   
-  # market_prices_compressed = api.get_market_prices_compressed(session_token, nil, nil, 102448928)
+  # market_prices_compressed = api.get_market_prices_compressed(session_token, 1, nil, 102458421)
   # market_prices_compressed.to_hash[:get_market_prices_compressed_response]
-  def get_market_prices_compressed(session_token, exchange = nil, currency_code = nil, market_id = nil)
-   exchange(exchange).request :bf, :get_market_prices_compressed do
-      soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :currencyCode => currency_code, :market_id => market_id } }
+  def get_market_prices_compressed(session_token, exchange_id, currency_code, market_id)
+    exchange(exchange_id).request :bf, :getMarketPricesCompressed do
+     soap.body = { 'bf:request' => { :header => api_request_header(session_token),  :currencyCode => currency_code, :marketId => market_id } }
     end
   end
 
   def get_macthed_and_unmatched_bets
     raise 'To Do'
   end
+  
+  def get_mu_bets(session_token, exchange_id, event_id)
+		exchange(exchange_id).request :bf, :getMUBets do
+			soap.body = {
+				'bf:request' => {
+					:header => api_request_header(session_token),
+					:betStatus => "MU",
+					:marketId => event_id,
+					:orderBy => "NONE",
+					:recordCount => 200,
+					:sortOrder => "ASC",
+					:startRecord => 0
+				}
+			}
+		end
+	end
 
   def get_macthed_and_unmatched_bets_lite
     raise 'To Do'
   end
-
+  
+  
   def get_profit_and_loss
     raise 'To Do'
   end
@@ -203,17 +222,23 @@ class BetfairAPI
   ## Bet Placement API Services Reference
   ############################################
 
-  def cancel_bets
-    raise 'To Do'
-  end
+  def cancel_bets(session_token, exchange_id, bet_id)		
+		bf_bet = { :betId => bet_id } # Cancels one bet at a time. See below.
+		exchange(exchange_id).request :bf, :cancelBets do
+			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :bets => { "CancelBets" => [bf_bet] } } } # "CancelBets" has to be a string, not a symbol!
+		end
+	end
 
   def cancel_bets_by_market
     raise 'To Do'
   end
 
-  def place_bets
-    raise 'To Do'
-  end
+  def place_bet(session_token, exchange_id, market_id, selection_id, bet_side, price, volume)				
+		bf_bet = { :asianLineId => 0, :betCategoryType => "E", :betPersistenceType => "NONE", :bspLiability => 0.0, :marketId => market_id, :selectionId => selection_id, :betType => bet_side, :price => price, :size => volume } # Places one bet at a time. See below.
+		exchange(exchange_id).request :bf, :placeBets do
+			soap.body = { 'bf:request' => { :header => api_request_header(session_token), :bets => { "PlaceBets" => [bf_bet] } } } # "PlaceBets" has to be a string, not a symbol!
+		end
+	end
 
   def update_bets
     raise 'To Do'
@@ -313,10 +338,15 @@ class BetfairAPI
     end
   end
 
-  def exchange(exchange = nil)
+  def exchange(exchange_id = nil)
     exchange = Savon::Client.new do
-      wsdl.endpoint = exchange.nil? ? 'https://api.betfair.com/exchange/v5/BFExchangeService' : 'https://api-au.betfair.com/exchange/v5/BFExchangeService'
-      wsdl.namespace = exchange.nil? ? 'http://www.betfair.com/exchange/v3/BFExchangeService/UK' : 'http://www.betfair.com/exchange/v3/BFExchangeService/AUS'
+      if exchange_id == 2
+        wsdl.endpoint = 'https://api-au.betfair.com/exchange/v5/BFExchangeService'
+        wsdl.namespace = 'http://www.betfair.com/exchange/v3/BFExchangeService/AUS' 
+      else
+        wsdl.endpoint = 'https://api.betfair.com/exchange/v5/BFExchangeService'
+        wsdl.namespace = 'http://www.betfair.com/exchange/v3/BFExchangeService/UK'
+      end
     end
   end
 
